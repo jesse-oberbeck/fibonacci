@@ -4,7 +4,10 @@ UsageStatement:
     .asciz "Usage: ./10times <word>"
 
 NumPrint:
-    .asciz "test: %lu\n"
+    .asciz "test: %lx %lx\n"
+
+NumPrintHigh:
+    .asciz "%lx ~~\n"
 
 .globl main
 main:
@@ -31,19 +34,9 @@ main:
     sub rsp, 16 # Put storage space on stack.
 
 1:
-    #mov r15, rsi # store B
     xadd rsi, r12 # B = A + B (C)
-
-Print:
-    mov [rsp + 8], rsi # store value on stack
-    mov rdi, OFFSET NumPrint
-    sub rsp, 8
-    call printf
-    add rsp, 8
-    mov rsi, [rsp + 8] # get value back from stack.
-
-
-    #mov r12, r15 # a = b(stored in C)
+    adc r14, r15
+    xchg r14, r15
 
     sub rbx, 1
 
@@ -52,11 +45,23 @@ Print:
 
 
 
-
 #Finish:
 
 
 Exit: 
+
+    mov [rsp + 8], rsi # store value on stack
+    mov rdx, rsi #Set up third arg.
+    mov rsi, r15 #Set up second arg.
+    mov rdi, OFFSET NumPrint #Set up first arg.
+    sub rsp, 8
+    call printf
+    add rsp, 8
+
+    mov rsi, [rsp + 8] # get value back from stack.
+
+
+
     add rsp, 16 # restore stack.
 
     mov rdi, OFFSET UsageStatement
