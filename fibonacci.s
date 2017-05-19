@@ -28,13 +28,13 @@ main:
     mov rbx, rax # count number of iterations/determin fibnum
     sub rbx, 1
 
-    mov r12, 0 # start A
+    mov rax, 0 # start A
     mov rsi, 1 # start B
 
     sub rsp, 16 # Put storage space on stack.
 
 1:
-    xadd rsi, r12 # B = A + B (C)
+    xadd rsi, rax # B = A + B (C)
     adc r14, r15
     xchg r14, r15
 
