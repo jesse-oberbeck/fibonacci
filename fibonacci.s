@@ -4,7 +4,7 @@ UsageStatement:
     .asciz "Usage: ./10times <word>"
 
 NumPrint:
-    .asciz "test: %lx %lx %lx %lx\n"
+    .asciz "\nNumber in Hex: %016lx%016lx%016lx%016lx\n\n"
 
 NumPrintHigh:
     .asciz "%lx ~~\n"
@@ -49,7 +49,6 @@ main:
     adc rcx, rdx
     xchg rcx, rdx
 
-# trying to add second adc
     adc r10, r11
     xchg r10, r11
 
@@ -72,9 +71,9 @@ Exit:
     mov r13, rdx #save
     mov r12, r9 #save
 
-    mov rsi, r12
-    mov rcx, r13
-    mov rdx, r11 #arg4 - second highest
+    mov rsi, r12 #arg2 - highest
+    mov rcx, r13 #arg4 - second lowest
+    mov rdx, r11 #arg3 - second highest
     mov r8, r15 #arg5 - lowest
 
 
