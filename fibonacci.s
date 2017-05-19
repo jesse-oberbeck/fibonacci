@@ -4,7 +4,7 @@ UsageStatement:
     .asciz "Usage: ./10times <word>"
 
 NumPrint:
-    .asciz "test: %lx %lx\n"
+    .asciz "test: %lx %lx %lx %lx\n"
 
 NumPrintHigh:
     .asciz "%lx ~~\n"
@@ -24,45 +24,68 @@ main:
     call strtol
     add rsp, 8
 
+    xor rcx, rcx
+    xor rdx, rdx
 
-    mov rbx, rax # count number of iterations/determin fibnum
+    mov rbx, rax # count number of iterations/determine fibnum
     sub rbx, 1
+
+    xor r8, r8
+    xor r9, r9
+    xor r10, r10
+    xor r11, r11
+    xor r12, r12
+    xor r14, r14
+    xor r15, r15
 
     mov rax, 0 # start A
     mov rsi, 1 # start B
 
-    sub rsp, 16 # Put storage space on stack.
+    #sub rsp, 16 # Put storage space on stack.
 
-1:
-    xadd rsi, rax # B = A + B (C)
-    adc r14, r15
-    xchg r14, r15
+
+1:  # Fibonacci Loop.
+    xadd rsi, rax
+    adc rcx, rdx
+    xchg rcx, rdx
+
+# trying to add second adc
+    adc r10, r11
+    xchg r10, r11
+
+    adc r8, r9
+    xchg r8, r9
 
     sub rbx, 1
 
-    jz Exit # cmp ecx to user input
-    jmp 1b # je Finish
+    jz Exit # Exit loop when count hits zero.
+    jmp 1b  # Otherwise go to beginning of loop.
 
-
-
-#Finish:
 
 
 Exit: 
 
-    mov [rsp + 8], rsi # store value on stack
-    mov rdx, rsi #Set up third arg.
-    mov rsi, r15 #Set up second arg.
     mov rdi, OFFSET NumPrint #Set up first arg.
+    #xchg rsi, r11 # Change order of args for print.
+    mov r15, rsi #save
+    mov r14, rcx #save
+    mov r13, rdx #save
+    mov r12, r9 #save
+
+    mov rsi, r12
+    mov rcx, r13
+    mov rdx, r11 #arg4 - second highest
+    mov r8, r15 #arg5 - lowest
+
+
+
     sub rsp, 8
     call printf
     add rsp, 8
 
-    mov rsi, [rsp + 8] # get value back from stack.
 
 
-
-    add rsp, 16 # restore stack.
+    #add rsp, 16 # restore stack.
 
     mov rdi, OFFSET UsageStatement
     call puts
